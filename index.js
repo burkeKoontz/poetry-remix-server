@@ -24,7 +24,17 @@ app.use(
 );
 
 app.get('/api/poems', (req, res, next) => {
-  fetch(`${POETRY_API_BASE_URL}/author,title/Shakespeare;Sonnet`)
+  const searchByAuthor = req.query.byAuthor;
+  const searchByTitle = req.query.byTitle;
+  let baseURL;
+  
+  if (searchByAuthor) {
+    baseURL = `${POETRY_API_BASE_URL}/author/${searchByAuthor}`;
+  } else if (searchByTitle) {
+    baseURL = `${POETRY_API_BASE_URL}/title/${searchByTitle}`;
+  }
+
+  fetch(baseURL)
     .then(poetryResponse => poetryResponse.json())
     .then(data => res.json(data))
     .catch(err => next(err));
