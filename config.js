@@ -7,7 +7,8 @@ module.exports = {
         process.env.DATABASE_URL || 'mongodb://localhost/thinkful-backend',
   TEST_DATABASE_URL:
         process.env.TEST_DATABASE_URL ||
-        'mongodb://localhost/thinkful-backend-test'
+        'mongodb://localhost/thinkful-backend-test',
+  POETRY_API_BASE_URL : 'http://poetrydb.org'
   // DATABASE_URL:
   //     process.env.DATABASE_URL || 'postgres://localhost/thinkful-backend',
   // TEST_DATABASE_URL:
