@@ -24,20 +24,41 @@ app.use(
 );
 
 app.get('/api/poems', (req, res, next) => {
-  const searchByAuthor = req.query.byAuthor;
-  const searchByTitle = req.query.byTitle;
+  const authorSearchTerm = req.query.authorSearchTerm;
+  const titleSearchTerm = req.query.titleSearchTerm;
   let baseURL;
-  
-  if (searchByAuthor) {
-    baseURL = `${POETRY_API_BASE_URL}/author/${searchByAuthor}`;
-  } else if (searchByTitle) {
-    baseURL = `${POETRY_API_BASE_URL}/title/${searchByTitle}`;
+
+  if (authorSearchTerm && titleSearchTerm) {
+    baseURL = `${POETRY_API_BASE_URL}/author,title/${authorSearchTerm};${titleSearchTerm}`;
+  } else if (titleSearchTerm) {
+    baseURL = `${POETRY_API_BASE_URL}/title/${titleSearchTerm}`;
+  } else if (authorSearchTerm) {
+    baseURL = `${POETRY_API_BASE_URL}/author/${authorSearchTerm}`;
   }
+
+  console.log(baseURL);
 
   fetch(baseURL)
     .then(poetryResponse => poetryResponse.json())
     .then(data => res.json(data))
     .catch(err => next(err));
+});
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// Custom Error Handler
+app.use((err, req, res, next) => {
+  if (err.status) {
+    const errBody = Object.assign({}, err, { message: err.message });
+    res.status(err.status).json(errBody);
+  } else {
+    // console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 function runServer(port = PORT) {
