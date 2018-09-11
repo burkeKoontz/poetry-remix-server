@@ -4,12 +4,14 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const fetch = require('node-fetch');
+const poemRouter = require('./routes/poems');
 
 const { PORT, CLIENT_ORIGIN, POETRY_API_BASE_URL } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
 
 const app = express();
+
+app.use(express.json());
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -23,7 +25,9 @@ app.use(
   })
 );
 
-app.get('/api/poems', (req, res, next) => {
+app.use('/api/poems', poemRouter);
+
+app.get('/api/db/poems', (req, res, next) => {
   const authorSearchTerm = req.query.authorSearchTerm;
   const titleSearchTerm = req.query.titleSearchTerm;
   let baseURL;
@@ -35,8 +39,6 @@ app.get('/api/poems', (req, res, next) => {
   } else if (authorSearchTerm) {
     baseURL = `${POETRY_API_BASE_URL}/author/${authorSearchTerm}`;
   }
-
-  console.log(baseURL);
 
   fetch(baseURL)
     .then(poetryResponse => poetryResponse.json())
@@ -73,7 +75,7 @@ function runServer(port = PORT) {
 }
 
 if (require.main === module) {
-  // dbConnect();
+  dbConnect();
   runServer();
 }
 
