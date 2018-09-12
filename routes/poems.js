@@ -52,6 +52,7 @@ router.post('/', (req, res, next) => {
   }
 
   const magnetArray = Object.keys(magnets).map(magnet => magnets[magnet]);
+  console.log(magnetArray);
   const newPoem = {title, magnets: magnetArray};
   Poem.create(newPoem)
     .then(result => {
