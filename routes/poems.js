@@ -30,7 +30,6 @@ router.get('/:id', (req, res, next) => {
 
   Poem
     .findOne({_id: id})
-    // .populate('tags')
     .then(result => {
       res.json(result);
     })
