@@ -5,8 +5,8 @@ const poemSchema = new mongoose.Schema({
   // a poem is just a collection of magnets and their locations
   // each magnet belongs to a specific poem
   title: { type: String, required: true },
-  magnets: [{title: String, left: Number, top: Number}]
-  // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  magnets: [{title: String, left: Number, top: Number}],
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
 poemSchema.set('toObject', {

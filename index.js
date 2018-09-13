@@ -5,6 +5,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 const fetch = require('node-fetch');
 const poemRouter = require('./routes/poems');
+const userRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+const passport = require('passport');
+
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
 
 const { PORT, CLIENT_ORIGIN, POETRY_API_BASE_URL } = require('./config');
 const { dbConnect } = require('./db-mongoose');
@@ -25,7 +31,12 @@ app.use(
   })
 );
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/api/auth', authRouter);
 app.use('/api/poems', poemRouter);
+app.use('/api/users', userRouter);
 
 app.get('/api/db/poems', (req, res, next) => {
   const authorSearchTerm = req.query.authorSearchTerm;
