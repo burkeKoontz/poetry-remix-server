@@ -98,7 +98,7 @@ router.post('/', (req, res, next) => {
     })
     .catch(err => {
       if (err.code === 11000) {
-        err = new Error('The username already exists');
+        err = new Error('That username is taken already');
         err.status = 400;
       }
       next(err);
