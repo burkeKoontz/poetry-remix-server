@@ -6,10 +6,13 @@ const mongoose = require('mongoose');
 const Poem = require('../models/poem');
 
 router.get('/', (req, res, next) => {
-  
+  let filter = {};
+  if (req.query.userId) {
+    filter.userId = req.query.userId;
+  }
+  // help
   Poem
-    .find()
-    // .populate('tags')
+    .find(filter)
     .sort({ updatedAt: 'desc' })
     .then(poems => {
       res.json(poems);
@@ -42,7 +45,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
   console.log(req.body);
   
-  const { title, magnets} = req.body;
+  const { title, magnets, userId} = req.body;
 
   if (!title) {
     const err = new Error('Missing `title` in request body');
@@ -52,7 +55,7 @@ router.post('/', (req, res, next) => {
 
   const magnetArray = Object.keys(magnets).map(magnet => magnets[magnet]);
   console.log(magnetArray);
-  const newPoem = {title, magnets: magnetArray};
+  const newPoem = {title, magnets: magnetArray, userId};
   Poem.create(newPoem)
     .then(result => {
       res

@@ -80,8 +80,6 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  
-
   return User.hashPassword(password)
     .then(digest => {
       const newUser = {
