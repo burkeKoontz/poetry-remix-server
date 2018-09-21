@@ -39,7 +39,6 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const {username, password} = req.body;
-  
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 

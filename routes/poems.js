@@ -45,7 +45,6 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  console.log(req.body);
   
   const { title, magnets, userId} = req.body;
 
@@ -56,7 +55,6 @@ router.post('/', (req, res, next) => {
   }
 
   const magnetArray = Object.keys(magnets).map(magnet => magnets[magnet]);
-  console.log(magnetArray);
   const newPoem = {title, magnets: magnetArray, userId};
   Poem.create(newPoem)
     .then(result => {
@@ -110,7 +108,6 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  console.log(updateItem);
 
   Poem.findOneAndUpdate({_id: idOfItemToUpdate}, updateItem, {new : true})
     .then(result => {

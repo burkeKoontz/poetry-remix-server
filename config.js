@@ -11,6 +11,6 @@ module.exports = {
         process.env.TEST_DATABASE_URL ||
         'mongodb://localhost/poetry-remix-test',
   POETRY_API_BASE_URL : 'http://poetrydb.org',
-  JWT_SECRET : process.env.JWT_SECRET,
+  JWT_SECRET : process.env.JWT_SECRET || 'hereIsAPlaceHolderString',
   JWT_EXPIRY : process.env.JWT_EXPIRY || '7d'
 };
