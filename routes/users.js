@@ -5,38 +5,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
-router.get('/', (req, res, next) => {
-  User
-    .find()
-    .sort({ updatedAt: 'desc' })
-    .then(users => {
-      res.json(users);
-    })
-    .catch(error => {
-      next(error);
-    });
-});
-
-router.get('/:id', (req, res, next) => {
-  const id = req.params.id;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error('The `id` is not valid');
-    err.status = 400;
-    return next(err);
-  }
-
-  User
-    .findOne({_id: id})
-    .then(result => {
-      res.json(result);
-    })
-    .catch(err => {
-      next(err);
-    });
- 
-});
-
 router.post('/', (req, res, next) => {
   const {username, password} = req.body;
   const requiredFields = ['username', 'password'];
