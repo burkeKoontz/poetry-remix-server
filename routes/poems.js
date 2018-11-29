@@ -69,7 +69,7 @@ router.post('/', (req, res, next) => {
 
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', jwtAuth, (req, res, next) => {
   const idOfItemToUpdate = req.params.id;
  
   if (req.body.id !== req.params.id) {
@@ -92,8 +92,8 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  if('userId' in req.body) {
-    const message = 'Cannot change ownership of poem';
+  if(req.user.id !== req.body.userId) {
+    const message = 'Cannot change a poem that is not yours';
     return res.status(400).send(message);
   }
 
@@ -107,7 +107,6 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-
 
   Poem.findOneAndUpdate({_id: idOfItemToUpdate}, updateItem, {new : true})
     .then(result => {
