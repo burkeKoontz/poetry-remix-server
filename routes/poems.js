@@ -118,31 +118,6 @@ router.put('/:id', jwtAuth, (req, res, next) => {
 });
 
 
-router.put('/:id', (req, res, next) => {
-  
-  const { title, magnets, userId} = req.body;
-
-  if (!title) {
-    const err = new Error('Missing `title` in request body');
-    err.status = 400;
-    return next(err);
-  }
-
-  const magnetArray = Object.keys(magnets).map(magnet => magnets[magnet]);
-  const newPoem = {title, magnets: magnetArray, userId};
-  Poem.create(newPoem)
-    .then(result => {
-      res
-        .location(`${req.originalUrl}/${result.id}`)
-        .status(201)
-        .json(result);
-    })
-    .catch(err => {
-      next(err);
-    });
-
-});
-
 router.delete('/:id', (req, res, next) => {
   const idOfItemToRemove = req.params.id;
   // put userId back in the filter if you know what's happening
