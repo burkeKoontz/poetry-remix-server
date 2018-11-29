@@ -92,6 +92,12 @@ router.put('/:id', jwtAuth, (req, res, next) => {
     return next(err);
   }
 
+  if (!mongoose.Types.ObjectId.isValid(req.body.userId)) {
+    const err = new Error('The `user id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
   if(req.user.id !== req.body.userId) {
     const message = 'Cannot change a poem that is not yours';
     return res.status(400).send(message);
