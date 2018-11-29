@@ -124,12 +124,29 @@ router.put('/:id', jwtAuth, (req, res, next) => {
 });
 
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', jwtAuth, (req, res, next) => {
   const idOfItemToRemove = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+    const err = new Error('The `user id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+  // each poem has a userId
+  // need to make sure that poem's userId matches the jwt userId
+
   // put userId back in the filter if you know what's happening
   // add jwt authentication in here at some point
   Poem
-    .findOneAndRemove({_id : idOfItemToRemove})
+    .findOne({_id : idOfItemToRemove})
+    .then(poem => {
+      if (JSON.stringify(poem.userId) !== JSON.stringify(req.user.id)) {
+        const message = 'Cannot delete a poem that is not yours';
+        return res.status(400).send(message);
+      } else {
+        return Poem.findOneAndRemove({_id : idOfItemToRemove});
+      }
+    })
     .then(() => {
       res.status(204).end();
     })
